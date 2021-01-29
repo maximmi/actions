@@ -251,7 +251,7 @@ jobs:
       run: make -C test/ module
 
     - name: "Build failed bats-module comment"
-    - id: bats-module-comment-body
+      id: bats-module-comment-body
       run: |
         body=$'## Bats Test [![Bats Status](https://img.shields.io/badge/Bats%20Status-Test%20Failed-red)]\n```'
         body="${body}$(cat test.log)"
@@ -277,7 +277,7 @@ jobs:
       run: make -C test/ examples/complete
 
     - name: "Build failed bats-example comment"
-    - id: bats-example-comment-body
+      id: bats-example-comment-body
       run: |
         body=$'## Bats Test [![Bats Status](https://img.shields.io/badge/Bats%20Status-Test%20Failed-red)]\n```'
         body="${body}$(cat examples/complete/test.log)"
