@@ -251,6 +251,7 @@ jobs:
       run: make -C test/ module
 
     - name: "Build failed bats-module comment"
+      if: ${{ failure() && steps.bats-module.outcome == 'failure' }}
       id: bats-module-comment-body
       run: |
         body=$'## Bats Test [![Bats Status](https://img.shields.io/badge/Bats%20Status-Test%20Failed-red)]\n```'
@@ -263,7 +264,7 @@ jobs:
 
     # Add comment to PR with bats test output if tests failed
     - name: "Comment bats-module output"
-      if: steps.bats-module.outcome == 'failure'
+      if: ${{ failure() && steps.bats-module.outcome == 'failure' }}
       uses: cloudposse/actions/github/create-or-update-comment@0.22.0
       with:
         repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
@@ -277,6 +278,7 @@ jobs:
       run: make -C test/ examples/complete
 
     - name: "Build failed bats-example comment"
+      if: ${{ failure() && steps.bats-example.outcome == 'failure' }}
       id: bats-example-comment-body
       run: |
         body=$'## Bats Test [![Bats Status](https://img.shields.io/badge/Bats%20Status-Test%20Failed-red)]\n```'
@@ -289,7 +291,7 @@ jobs:
 
       # Add comment to PR with bats test output if tests failed
     - name: "Comment bats-example output"
-      if: steps.bats-example.outcome == 'failure'
+      if: ${{ failure() && steps.bats-example.outcome == 'failure' }}
       uses: cloudposse/actions/github/create-or-update-comment@0.22.0
       with:
         repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
