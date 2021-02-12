@@ -258,9 +258,8 @@ jobs:
       if: ${{ failure() && steps.bats-module.outcome == 'failure' }}
       id: bats-module-comment-body
       run: |
-        body=$'## Bats Main Module Check: ![Bats Status](https://img.shields.io/badge/Bats%20Status-failed-crimson)\n```'
+        body=$'## Bats Main Module Check: ![Bats Status](https://img.shields.io/badge/Bats%20Status-failed-crimson)\n'
         body="${body}$(cat test.log)"
-        body=$(printf '%s\n```' "$body")
         body="${body//'%'/'%25'}"
         body="${body//$'\n'/'%0A'}"
         body="${body//$'\r'/'%0D'}"
@@ -285,9 +284,8 @@ jobs:
       if: ${{ failure() && steps.bats-example.outcome == 'failure' }}
       id: bats-example-comment-body
       run: |
-        body=$'## Bats Example Module Check: ![Bats Status](https://img.shields.io/badge/Bats%20Status-failed-crimson)\n```'
+        body=$'## Bats Example Module Check: ![Bats Status](https://img.shields.io/badge/Bats%20Status-failed-crimson)\n'
         body="${body}$(cat examples/complete/test.log)"
-        body=$(printf '%s\n```' "$body")
         body="${body//'%'/'%25'}"
         body="${body//$'\n'/'%0A'}"
         body="${body//$'\r'/'%0D'}"
