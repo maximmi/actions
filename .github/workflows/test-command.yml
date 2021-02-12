@@ -242,11 +242,15 @@ jobs:
     # Initialize the test-harness which has a library of bats tests
     - name: "Initialize test-harness"
       env:
-        TEST_HARNESS_BRANCH: master
+        TEST_HARNESS_BRANCH: bats-logs-improved
+        LOG_MARKDOWN: true
       run: make -C test/ clean init
 
     # Run the bats tests from the test-harness against the module
     - name: "Test module with bats"
+      env:
+        TEST_HARNESS_BRANCH: bats-logs-improved
+        LOG_MARKDOWN: true
       id: "bats-module"
       run: make -C test/ module
 
@@ -254,7 +258,7 @@ jobs:
       if: ${{ failure() && steps.bats-module.outcome == 'failure' }}
       id: bats-module-comment-body
       run: |
-        body=$'## Bats main module test: ![Bats Status](https://img.shields.io/badge/Bats%20Status-Test%20Failed-red)\n```'
+        body=$'## Bats Main Module Check: ![Bats Status](https://img.shields.io/badge/Bats%20Status-failed-crimson)\n```'
         body="${body}$(cat test.log)"
         body=$(printf '%s\n```' "$body")
         body="${body//'%'/'%25'}"
@@ -265,7 +269,7 @@ jobs:
     # Add comment to PR with bats test output if tests failed
     - name: "Comment bats-module output"
       if: ${{ failure() && steps.bats-module.outcome == 'failure' }}
-      uses: cloudposse/actions/github/create-or-update-comment@0.22.0
+      uses: cloudposse/actions/github/create-or-update-comment@0.28.1
       with:
         repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
         issue-number: ${{ github.event.client_payload.github.payload.issue.number }}
@@ -281,7 +285,7 @@ jobs:
       if: ${{ failure() && steps.bats-example.outcome == 'failure' }}
       id: bats-example-comment-body
       run: |
-        body=$'## Bats example module test: ![Bats Status](https://img.shields.io/badge/Bats%20Status-Test%20Failed-red)\n```'
+        body=$'## Bats Example Module Check: ![Bats Status](https://img.shields.io/badge/Bats%20Status-failed-crimson)\n```'
         body="${body}$(cat examples/complete/test.log)"
         body=$(printf '%s\n```' "$body")
         body="${body//'%'/'%25'}"
@@ -292,12 +296,13 @@ jobs:
       # Add comment to PR with bats test output if tests failed
     - name: "Comment bats-example output"
       if: ${{ failure() && steps.bats-example.outcome == 'failure' }}
-      uses: cloudposse/actions/github/create-or-update-comment@0.22.0
+      uses: cloudposse/actions/github/create-or-update-comment@0.28.1
       with:
         repository: ${{ github.event.client_payload.github.payload.repository.full_name }}
         issue-number: ${{ github.event.client_payload.github.payload.issue.number }}
         token: ${{ secrets.PUBLIC_REPO_ACCESS_TOKEN }}
         body: ${{ steps.bats-example-comment-body.outputs.body }}
+
 
     # Update GitHub status for dispatch events
     - name: "Update GitHub Status for failure"
